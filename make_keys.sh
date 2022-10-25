@@ -1,6 +1,6 @@
 #!/bin/bash
 #
-# Usage: makek_keys.sh [prefix]
+# Usage: make_keys.sh [prefix]
 #
 # Makes two files: private_key.pem and certificate.pem, optionally prefixed
 # with the first positional argument.
