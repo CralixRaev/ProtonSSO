@@ -13,6 +13,8 @@ from login_blueprint.login import login
 from db.__all_models import *
 from flask_login import LoginManager
 
+from manage_blueprint.manage import manage
+
 load_dotenv()
 
 app = Flask(__name__)
@@ -25,6 +27,11 @@ app.config['SMARTCAPTCHA_CLIENT_KEY'] = os.getenv("SMARTCAPTCHA_CLIENT_KEY")
 
 login_manager = LoginManager()
 login_manager.init_app(app)
+
+login_manager.login_view = "login.index"
+login_manager.login_message = "Пожалуйста, войдите, что бы просматривать эту страницу"
+login_manager.login_message_category = "warning"
+login_manager.session_protection = "strong"
 
 app.config['SAML2_IDP'] = {
     'autosubmit': True,
@@ -53,6 +60,7 @@ migrate = Migrate(app, db, render_as_batch=True, compare_type=True)
 
 idp = ProtonIdentityProvider()
 app.register_blueprint(login, url_prefix="/login/")
+app.register_blueprint(manage, url_prefix="/manage/")
 app.register_blueprint(idp.create_blueprint(), url_prefix='/saml/')
 
 

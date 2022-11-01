@@ -1,0 +1,70 @@
+{% extends "manage/base.html" %}
+
+{% block content %}
+    <div>
+        <div class="col">
+            <div class="row">
+                <div class="col mb-3">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="e-profile">
+                                <div class="row">
+                                    <div class="col-12 col-sm-auto mb-3">
+                                        <div><img class="img-fluid img-thumbnail"
+                                                  style="object-fit: contain; width: 140px; height: 140px"
+                                                  src="{{ current_user.avatar_path }}"></div>
+                                    </div>
+                                    <div class="col d-flex flex-column flex-sm-row justify-content-between mb-3">
+                                        <div class="text-center text-sm-left mb-2 mb-sm-0">
+                                            <h4 class="pt-sm-2 pb-1 mb-0 text-nowrap">{{ current_user.full_name }}</h4>
+                                            <p class="mb-0">{{ current_user.login }}</p>
+                                            <form action="" method="POST" enctype="multipart/form-data"
+                                                  id="avatar_form">
+                                                {{ form_avatar.hidden_tag() }}
+                                                <div class="mt-2">
+                                                    <button class="btn btn-primary" type="button", id="btnupload">
+                                                        <i class="fa fa-fw fa-camera"></i>
+                                                        <span>Сменить фотографию профиля</span>
+                                                    </button>
+                                                    {{ form_avatar.image(style="display: none", id="inpupload") }}
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+                                <ul class="nav nav-tabs">
+                                    <li class="nav-item"><a href="{{ url_for(".index") }}"
+                                                            class="nav-link{% if url_for(request.endpoint) == url_for(".index") %} active{% endif %}"><span data-feather="settings" class="me-2"></span>Настройки</a>
+                                    </li>
+                                </ul>
+
+                                <div class="tab-content pt-3">
+                                    <div class="tab-pane active">
+                                        {% block account_tab %}{% endblock %}
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <script>
+                $(document.body).ready(function () {
+                    let allowed_mime_types = ['image/jpeg', 'image/png'];
+                    $("#btnupload").click(function () {
+                        $("#inpupload").trigger("click");
+                    });
+                    $("#inpupload").change(function () {
+                        let input = $("#inpupload")[0]
+                        if (input.files.length == 1) {
+                            let file = input.files[0]
+                            if (allowed_mime_types.indexOf(file.type) == -1) {
+                                alert('Неправильный формат файла.');
+                                return;
+                            }
+                            $("#avatar_form").submit();
+                        }
+                    });
+                });
+            </script>
+{% endblock %}
